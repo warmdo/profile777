@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WD Log Interaktif</title>
+<title>WD Log Interaktif Otomatis</title>
 <style>
 body{font-family:Arial;margin:20px;}
 table{width:100%;border-collapse:collapse;margin-top:20px;}
@@ -20,15 +20,11 @@ input.inline{width:90%;}
 </head>
 <body>
 
-<h2>WD Log 24 Jam Interaktif</h2>
+<h2>WD Log 24 Jam Interaktif Otomatis</h2>
 
 <h3>Tambah Data</h3>
-<select id="siteSelectAdd">
-  <option value="EDAN777">EDAN777</option>
-  <option value="REPUBLIK62">REPUBLIK62</option>
-  <option value="ISTANA62">ISTANA62</option>
-  <option value="WARGA62">WARGA62</option>
-</select>
+<label>Pilih Situs:</label>
+<select id="siteSelectAdd"></select>
 <input type="datetime-local" id="jamWDAdd">
 <input type="url" id="linkBuktiAdd" placeholder="Link Bukti">
 <input type="url" id="gambarURLAdd" placeholder="URL Gambar">
@@ -47,8 +43,11 @@ input.inline{width:90%;}
 </div>
 
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbwIl5yRgNipOg3EaSG-UPc7KEtORzv5dOXYV1A-ZJcgmzz0Y7q-WhrQowHy…"; // ganti dengan URL Web App
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzx983O3czD1Jc0L_D2JwHe_AMN2htQyR7Z8SWGnhg2LQLD48q4lyVXnek5xFUXe5rI/exec"; // ganti dengan URL Web App
 
+let wdData=[];
+
+// Format jam 24 jam
 function format24Jam(datetimeStr){
   if(!datetimeStr) return '';
   const dt=new Date(datetimeStr);
@@ -59,18 +58,28 @@ function format24Jam(datetimeStr){
   return `${y}-${m}-${d} ${h}:${min}`;
 }
 
-let wdData=[];
-
+// Ambil data dari Sheet
 async function fetchData(){
   const res=await fetch(WEB_APP_URL);
   wdData=await res.json();
+  updateDropdown(); // update situs otomatis
   renderTable();
 }
 
+// Update dropdown otomatis
+function updateDropdown(){
+  const select=document.getElementById('siteSelectAdd');
+  const sites=[...new Set(wdData.map(d=>d.Situs))];
+  select.innerHTML=sites.map(s=>`<option value="${s}">${s}</option>`).join('');
+}
+
+// Render tabel
 function renderTable(){
   const tbody=document.getElementById('wdTableBody');
   tbody.innerHTML='';
+  const selectedSite=document.getElementById('siteSelectAdd').value;
   wdData.forEach((item,index)=>{
+    if(item.Situs!==selectedSite) return;
     const row=document.createElement('tr');
     row.innerHTML=`
       <td>${item.Situs}</td>
@@ -86,7 +95,10 @@ function renderTable(){
 }
 
 // Modal gambar
-function showModal(src){ document.getElementById('modalImg').src=src; document.getElementById('imgModal').style.display='block'; }
+function showModal(src){
+  document.getElementById('modalImg').src=src;
+  document.getElementById('imgModal').style.display='block';
+}
 
 // Tambah data
 async function addData(){
@@ -95,6 +107,9 @@ async function addData(){
   const link=document.getElementById('linkBuktiAdd').value;
   const gambar=document.getElementById('gambarURLAdd').value;
   await fetch(`${WEB_APP_URL}?action=add&situs=${encodeURIComponent(situs)}&jam=${encodeURIComponent(jam)}&link=${encodeURIComponent(link)}&gambar=${encodeURIComponent(gambar)}`);
+  document.getElementById('jamWDAdd').value='';
+  document.getElementById('linkBuktiAdd').value='';
+  document.getElementById('gambarURLAdd').value='';
   fetchData();
 }
 
@@ -128,6 +143,9 @@ async function deleteRow(index){
     fetchData();
   }
 }
+
+// Update tabel saat dropdown berubah
+document.getElementById('siteSelectAdd').addEventListener('change',()=>renderTable());
 
 fetchData();
 </script>
