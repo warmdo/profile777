@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WD Log Google Sheet Interaktif</title>
+<title>WD Log Interaktif</title>
 <style>
-body { font-family: Arial; margin: 20px; }
-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-th, td { border:1px solid #ccc; padding:8px; text-align:center; }
-th { background-color:#007bff; color:white; }
-td img { width:80px; cursor:pointer; }
-input, select, button { padding:5px; margin:5px 0; }
-.modal { display:none; position:fixed; z-index:1000; padding-top:60px; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8);}
-.modal-content { display:block; margin:auto; max-width:90%; max-height:80%; }
-.close { position:absolute; top:20px; right:35px; color:white; font-size:40px; cursor:pointer; }
-input.inline { width:90%; }
+body{font-family:Arial;margin:20px;}
+table{width:100%;border-collapse:collapse;margin-top:20px;}
+th,td{border:1px solid #ccc;padding:8px;text-align:center;}
+th{background:#007bff;color:white;}
+td img{width:80px;cursor:pointer;}
+input,select,button{padding:5px;margin:5px 0;}
+button{cursor:pointer;}
+.modal{display:none;position:fixed;z-index:1000;padding-top:60px;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.8);}
+.modal-content{display:block;margin:auto;max-width:90%;max-height:80%;}
+.close{position:absolute;top:20px;right:35px;color:white;font-size:40px;cursor:pointer;}
+input.inline{width:90%;}
 </style>
 </head>
 <body>
@@ -46,32 +47,32 @@ input.inline { width:90%; }
 </div>
 
 <script>
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbydxmnd1xv1Oa5EKIvqheleIG9Xib2XWv7UW32YK2ksp-fN61ddb_7LN4xCc4XSYyMtRA/exec";
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzYt8oZ-A4fOQ8VXIH6pHKNhARexRnsoIrcrTtts4UFCsX25K1l2QSst12xUmU-gNUk6A/exec"; // ganti dengan URL Web App
 
 function format24Jam(datetimeStr){
   if(!datetimeStr) return '';
-  const dt = new Date(datetimeStr);
-  const y = dt.getFullYear(), m = String(dt.getMonth()+1).padStart(2,'0'),
-        d = String(dt.getDate()).padStart(2,'0'),
-        h = String(dt.getHours()).padStart(2,'0'),
-        min = String(dt.getMinutes()).padStart(2,'0');
+  const dt=new Date(datetimeStr);
+  const y=dt.getFullYear(), m=String(dt.getMonth()+1).padStart(2,'0'),
+        d=String(dt.getDate()).padStart(2,'0'),
+        h=String(dt.getHours()).padStart(2,'0'),
+        min=String(dt.getMinutes()).padStart(2,'0');
   return `${y}-${m}-${d} ${h}:${min}`;
 }
 
-let wdData = [];
+let wdData=[];
 
 async function fetchData(){
-  const res = await fetch(WEB_APP_URL);
-  wdData = await res.json();
+  const res=await fetch(WEB_APP_URL);
+  wdData=await res.json();
   renderTable();
 }
 
 function renderTable(){
-  const tbody = document.getElementById('wdTableBody');
-  tbody.innerHTML = '';
+  const tbody=document.getElementById('wdTableBody');
+  tbody.innerHTML='';
   wdData.forEach((item,index)=>{
-    const row = document.createElement('tr');
-    row.innerHTML = `
+    const row=document.createElement('tr');
+    row.innerHTML=`
       <td>${item.Situs}</td>
       <td>${format24Jam(item['Jam WD'])}</td>
       <td><a href="${item['Link Bukti']}" target="_blank">Link</a></td>
@@ -79,30 +80,29 @@ function renderTable(){
       <td>
         <button onclick="editRow(${index})">Edit</button>
         <button onclick="deleteRow(${index})">Hapus</button>
-      </td>
-    `;
+      </td>`;
     tbody.appendChild(row);
   });
 }
 
-// Modal
+// Modal gambar
 function showModal(src){ document.getElementById('modalImg').src=src; document.getElementById('imgModal').style.display='block'; }
 
 // Tambah data
 async function addData(){
-  const situs = document.getElementById('siteSelectAdd').value;
-  const jam = document.getElementById('jamWDAdd').value;
-  const link = document.getElementById('linkBuktiAdd').value;
-  const gambar = document.getElementById('gambarURLAdd').value;
+  const situs=document.getElementById('siteSelectAdd').value;
+  const jam=document.getElementById('jamWDAdd').value;
+  const link=document.getElementById('linkBuktiAdd').value;
+  const gambar=document.getElementById('gambarURLAdd').value;
   await fetch(`${WEB_APP_URL}?action=add&situs=${encodeURIComponent(situs)}&jam=${encodeURIComponent(jam)}&link=${encodeURIComponent(link)}&gambar=${encodeURIComponent(gambar)}`);
   fetchData();
 }
 
-// Edit data
+// Edit inline
 function editRow(index){
-  const item = wdData[index];
-  const row = document.getElementById('wdTableBody').children[index];
-  row.innerHTML = `
+  const item=wdData[index];
+  const row=document.getElementById('wdTableBody').children[index];
+  row.innerHTML=`
     <td><input class="inline" value="${item.Situs}"></td>
     <td><input class="inline" type="datetime-local" value="${item['Jam WD']}"></td>
     <td><input class="inline" type="url" value="${item['Link Bukti']}"></td>
@@ -110,14 +110,13 @@ function editRow(index){
     <td>
       <button onclick="saveRow(${index})">Simpan</button>
       <button onclick="fetchData()">Batal</button>
-    </td>
-  `;
+    </td>`;
 }
 
 // Simpan edit
 async function saveRow(index){
-  const row = document.getElementById('wdTableBody').children[index];
-  const inputs = row.querySelectorAll('input');
+  const row=document.getElementById('wdTableBody').children[index];
+  const inputs=row.querySelectorAll('input');
   await fetch(`${WEB_APP_URL}?action=edit&index=${index}&situs=${encodeURIComponent(inputs[0].value)}&jam=${encodeURIComponent(inputs[1].value)}&link=${encodeURIComponent(inputs[2].value)}&gambar=${encodeURIComponent(inputs[3].value)}`);
   fetchData();
 }
