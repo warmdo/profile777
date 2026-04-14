@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WD Log 24 Jam Final</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+h2 { color: red; }
+select, input, button { padding: 5px; margin: 5px 0; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+th { background-color: #007bff; color: white; }
+td a { color: #007bff; text-decoration: none; }
+td a:hover { text-decoration: underline; }
+td img { width: 80px; height: auto; cursor: pointer; transition: transform 0.2s; }
+td img:hover { transform: scale(1.1); }
+button.edit, button.delete, button.save, button.cancel { margin: 2px; padding: 3px 5px; cursor: pointer; }
+.modal { display: none; position: fixed; z-index: 1000; padding-top: 60px;
+         left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
+         background-color: rgba(0,0,0,0.8); }
+.modal-content { margin: auto; display: block; max-width: 90%; max-height: 80%; }
+.close { position: absolute; top: 20px; right: 35px; color: white;
+         font-size: 40px; font-weight: bold; cursor: pointer; }
+input.inline { width: 90%; }
+</style>
+</head>
+<body>
+
+<label for="siteSelect">Pilih Situs: </label>
+<select id="siteSelect">
+    <option value="EDAN777">EDAN777</option>
+    <option value="REPUBLIK62">REPUBLIK62</option>
+    <option value="ISTANA62">ISTANA62</option>
+    <option value="WARGA62">WARGA62</option>
+</select>
+
+<h3>Tambah Data WD</h3>
+<form id="wdForm">
+    <input type="datetime-local" id="jamWD" required> Jam WD<br>
+    <input type="url" id="linkBukti" placeholder="Link Bukti" required><br>
+    <input type="url" id="gambarURL" placeholder="URL Gambar" required><br>
+    <button type="submit">Tambah Data</button>
+</form>
+
+<table id="wdTable">
+    <thead>
+        <tr>
+            <th>Jam WD</th>
+            <th>Link Bukti</th>
+            <th>Gambar</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Modal Gambar -->
+<div id="imgModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImg">
+</div>
+
+<script>
+// Fungsi format 24 jam YYYY-MM-DD HH:MM
+function format24Jam(datetimeStr) {
+    if(!datetimeStr) return '';
+    const dt = new Date(datetimeStr);
+    const year = dt.getFullYear();
+    const month = String(dt.getMonth()+1).padStart(2,'0');
+    const day = String(dt.getDate()).padStart(2,'0');
+    const hours = String(dt.getHours()).padStart(2,'0');
+    const minutes = String(dt.getMinutes()).padStart(2,'0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+// Fungsi format input datetime-local
+function formatInputValue(datetimeStr){
+    if(!datetimeStr) return '';
+    const dt = new Date(datetimeStr);
+    const year = dt.getFullYear();
+    const month = String(dt.getMonth()+1).padStart(2,'0');
+    const day = String(dt.getDate()).padStart(2,'0');
+    const hours = String(dt.getHours()).padStart(2,'0');
+    const minutes = String(dt.getMinutes()).padStart(2,'0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+// Inisialisasi data
+let wdData = JSON.parse(localStorage.getItem('wdData')) || {
+    EDAN777: [], REPUBLIK62: [], ISTANA62: [], WARGA62: []
+};
+
+const wdForm = document.getElementById('wdForm');
+const wdTableBody = document.querySelector('#wdTable tbody');
+const siteSelect = document.getElementById('siteSelect');
+
+function renderTable(situs) {
+    wdTableBody.innerHTML = '';
+    wdData[situs].forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${format24Jam(item.jam)}</td>
+            <td><a href="${item.link}" target="_blank">Link</a></td>
+            <td><img src="${item.gambar}" alt="Gambar" onclick="showModal(this.src)"></td>
+            <td>
+                <button class="edit" onclick="editRow(this, ${index})">Edit</button>
+                <button class="delete" onclick="deleteRow(${index})">Hapus</button>
+            </td>
+        `;
+        wdTableBody.appendChild(row);
+    });
+}
+
+// Tambah data baru
+wdForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    const situs = siteSelect.value;
+    const jamWD = document.getElementById('jamWD').value;
+    const linkBukti = document.getElementById('linkBukti').value;
+    const gambarURL = document.getElementById('gambarURL').value;
+
+    wdData[situs].push({ jam: jamWD, link: linkBukti, gambar: gambarURL });
+    localStorage.setItem('wdData', JSON.stringify(wdData));
+    renderTable(situs);
+    wdForm.reset();
+});
+
+// Edit inline
+function editRow(btn, index){
+    const situs = siteSelect.value;
+    const row = btn.closest('tr');
+    const item = wdData[situs][index];
+    row.innerHTML = `
+        <td><input class="inline" type="datetime-local" value="${formatInputValue(item.jam)}"></td>
+        <td><input class="inline" type="url" value="${item.link}"></td>
+        <td><input class="inline" type="url" value="${item.gambar}"></td>
+        <td>
+            <button class="save" onclick="saveRow(this, ${index})">Simpan</button>
+            <button class="cancel" onclick="cancelEdit(${index})">Batal</button>
+        </td>
+    `;
+}
+
+// Simpan edit
+function saveRow(btn, index){
+    const situs = siteSelect.value;
+    const row = btn.closest('tr');
+    const inputs = row.querySelectorAll('input');
+    wdData[situs][index] = {
+        jam: inputs[0].value,
+        link: inputs[1].value,
+        gambar: inputs[2].value
+    };
+    localStorage.setItem('wdData', JSON.stringify(wdData));
+    renderTable(situs);
+}
+
+// Batal edit
+function cancelEdit(index){ renderTable(siteSelect.value); }
+
+// Hapus
+function deleteRow(index){
+    const situs = siteSelect.value;
+    if(confirm('Yakin ingin menghapus data ini?')){
+        wdData[situs].splice(index,1);
+        localStorage.setItem('wdData', JSON.stringify(wdData));
+        renderTable(situs);
+    }
+}
+
+// Modal gambar
+function showModal(src){
+    document.getElementById('modalImg').src = src;
+    document.getElementById('imgModal').style.display = "block";
+}
+function closeModal(){
+    document.getElementById('imgModal').style.display = "none";
+}
+
+// Dropdown situs
+siteSelect.addEventListener('change', function(){ renderTable(this.value); });
+
+// Render awal
+renderTable(siteSelect.value);
+</script>
+
+</body>
+</html>
