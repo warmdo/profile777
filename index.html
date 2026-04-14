@@ -20,7 +20,7 @@ input.inline{width:90%;}
 </head>
 <body>
 
-<h2>WD Log 24 Jam Interaktif Otomatis</h2>
+<h2>WD Log 24 Jam Interaktif</h2>
 
 <h3>Tambah Data</h3>
 <label>Pilih Situs:</label>
@@ -43,37 +43,30 @@ input.inline{width:90%;}
 </div>
 
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbwkuSP4OqD4BzBvJoMojn_S0xIkNWggec0NleZPV1MPsXXl1GZ5yhwUaF7lqT4uf0EK/exec"; // ganti dengan URL Web App
-
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbypNc1DGe8O1IqWq9Ufibv7BDdvQlAG5mkS8PFx_TDVqzHg9uI1pgxZ9r5nqU1LRh2tHQ/exec"; // ganti dengan Web App URL Anda
 let wdData=[];
 
-// Format jam 24 jam
 function format24Jam(datetimeStr){
   if(!datetimeStr) return '';
   const dt=new Date(datetimeStr);
-  const y=dt.getFullYear(), m=String(dt.getMonth()+1).padStart(2,'0'),
-        d=String(dt.getDate()).padStart(2,'0'),
-        h=String(dt.getHours()).padStart(2,'0'),
-        min=String(dt.getMinutes()).padStart(2,'0');
-  return `${y}-${m}-${d} ${h}:${min}`;
+  return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' +
+         String(dt.getDate()).padStart(2,'0') + ' ' +
+         String(dt.getHours()).padStart(2,'0') + ':' + String(dt.getMinutes()).padStart(2,'0');
 }
 
-// Ambil data dari Sheet
 async function fetchData(){
-  const res=await fetch(WEB_APP_URL);
-  wdData=await res.json();
-  updateDropdown(); // update situs otomatis
+  const res = await fetch(WEB_APP_URL);
+  wdData = await res.json();
+  updateDropdown();
   renderTable();
 }
 
-// Update dropdown otomatis
 function updateDropdown(){
   const select=document.getElementById('siteSelectAdd');
   const sites=[...new Set(wdData.map(d=>d.Situs))];
-  select.innerHTML=sites.map(s=>`<option value="${s}">${s}</option>`).join('');
+  select.innerHTML = sites.map(s=>`<option value="${s}">${s}</option>`).join('');
 }
 
-// Render tabel
 function renderTable(){
   const tbody=document.getElementById('wdTableBody');
   tbody.innerHTML='';
@@ -94,13 +87,11 @@ function renderTable(){
   });
 }
 
-// Modal gambar
 function showModal(src){
   document.getElementById('modalImg').src=src;
   document.getElementById('imgModal').style.display='block';
 }
 
-// Tambah data
 async function addData(){
   const situs=document.getElementById('siteSelectAdd').value;
   const jam=document.getElementById('jamWDAdd').value;
@@ -113,7 +104,6 @@ async function addData(){
   fetchData();
 }
 
-// Edit inline
 function editRow(index){
   const item=wdData[index];
   const row=document.getElementById('wdTableBody').children[index];
@@ -128,7 +118,6 @@ function editRow(index){
     </td>`;
 }
 
-// Simpan edit
 async function saveRow(index){
   const row=document.getElementById('wdTableBody').children[index];
   const inputs=row.querySelectorAll('input');
@@ -136,7 +125,6 @@ async function saveRow(index){
   fetchData();
 }
 
-// Hapus data
 async function deleteRow(index){
   if(confirm('Yakin ingin menghapus data ini?')){
     await fetch(`${WEB_APP_URL}?action=delete&index=${index}`);
@@ -144,7 +132,6 @@ async function deleteRow(index){
   }
 }
 
-// Update tabel saat dropdown berubah
 document.getElementById('siteSelectAdd').addEventListener('change',()=>renderTable());
 
 fetchData();
