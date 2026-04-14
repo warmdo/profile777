@@ -3,186 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WD Log 24 Jam Final</title>
+<title>WD Log Google Sheet Interaktif</title>
 <style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-h2 { color: red; }
-select, input, button { padding: 5px; margin: 5px 0; }
+body { font-family: Arial; margin: 20px; }
 table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-th { background-color: #007bff; color: white; }
-td a { color: #007bff; text-decoration: none; }
-td a:hover { text-decoration: underline; }
-td img { width: 80px; height: auto; cursor: pointer; transition: transform 0.2s; }
-td img:hover { transform: scale(1.1); }
-button.edit, button.delete, button.save, button.cancel { margin: 2px; padding: 3px 5px; cursor: pointer; }
-.modal { display: none; position: fixed; z-index: 1000; padding-top: 60px;
-         left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
-         background-color: rgba(0,0,0,0.8); }
-.modal-content { margin: auto; display: block; max-width: 90%; max-height: 80%; }
-.close { position: absolute; top: 20px; right: 35px; color: white;
-         font-size: 40px; font-weight: bold; cursor: pointer; }
-input.inline { width: 90%; }
+th, td { border:1px solid #ccc; padding:8px; text-align:center; }
+th { background-color:#007bff; color:white; }
+td img { width:80px; cursor:pointer; }
+input, select, button { padding:5px; margin:5px 0; }
+.modal { display:none; position:fixed; z-index:1000; padding-top:60px; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8);}
+.modal-content { display:block; margin:auto; max-width:90%; max-height:80%; }
+.close { position:absolute; top:20px; right:35px; color:white; font-size:40px; cursor:pointer; }
+input.inline { width:90%; }
 </style>
 </head>
 <body>
 
-<label for="siteSelect">Pilih Situs: </label>
-<select id="siteSelect">
-    <option value="EDAN777">EDAN777</option>
-    <option value="REPUBLIK62">REPUBLIK62</option>
-    <option value="ISTANA62">ISTANA62</option>
-    <option value="WARGA62">WARGA62</option>
+<h2>WD Log 24 Jam Interaktif</h2>
+
+<h3>Tambah Data</h3>
+<select id="siteSelectAdd">
+  <option value="EDAN777">EDAN777</option>
+  <option value="REPUBLIK62">REPUBLIK62</option>
+  <option value="ISTANA62">ISTANA62</option>
+  <option value="WARGA62">WARGA62</option>
 </select>
+<input type="datetime-local" id="jamWDAdd">
+<input type="url" id="linkBuktiAdd" placeholder="Link Bukti">
+<input type="url" id="gambarURLAdd" placeholder="URL Gambar">
+<button onclick="addData()">Tambah</button>
 
-<h3>Tambah Data WD</h3>
-<form id="wdForm">
-    <input type="datetime-local" id="jamWD" required> Jam WD<br>
-    <input type="url" id="linkBukti" placeholder="Link Bukti" required><br>
-    <input type="url" id="gambarURL" placeholder="URL Gambar" required><br>
-    <button type="submit">Tambah Data</button>
-</form>
-
-<table id="wdTable">
-    <thead>
-        <tr>
-            <th>Jam WD</th>
-            <th>Link Bukti</th>
-            <th>Gambar</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
+<table>
+<thead>
+<tr><th>Situs</th><th>Jam WD</th><th>Link Bukti</th><th>Gambar</th><th>Aksi</th></tr>
+</thead>
+<tbody id="wdTableBody"></tbody>
 </table>
 
-<!-- Modal Gambar -->
 <div id="imgModal" class="modal">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="modalImg">
+<span class="close" onclick="document.getElementById('imgModal').style.display='none'">&times;</span>
+<img class="modal-content" id="modalImg">
 </div>
 
 <script>
-// Fungsi format 24 jam YYYY-MM-DD HH:MM
-function format24Jam(datetimeStr) {
-    if(!datetimeStr) return '';
-    const dt = new Date(datetimeStr);
-    const year = dt.getFullYear();
-    const month = String(dt.getMonth()+1).padStart(2,'0');
-    const day = String(dt.getDate()).padStart(2,'0');
-    const hours = String(dt.getHours()).padStart(2,'0');
-    const minutes = String(dt.getMinutes()).padStart(2,'0');
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbydxmnd1xv1Oa5EKIvqheleIG9Xib2XWv7UW32YK2ksp-fN61ddb_7LN4xCc4XSYyMtRA/exec";
+
+function format24Jam(datetimeStr){
+  if(!datetimeStr) return '';
+  const dt = new Date(datetimeStr);
+  const y = dt.getFullYear(), m = String(dt.getMonth()+1).padStart(2,'0'),
+        d = String(dt.getDate()).padStart(2,'0'),
+        h = String(dt.getHours()).padStart(2,'0'),
+        min = String(dt.getMinutes()).padStart(2,'0');
+  return `${y}-${m}-${d} ${h}:${min}`;
 }
 
-// Fungsi format input datetime-local
-function formatInputValue(datetimeStr){
-    if(!datetimeStr) return '';
-    const dt = new Date(datetimeStr);
-    const year = dt.getFullYear();
-    const month = String(dt.getMonth()+1).padStart(2,'0');
-    const day = String(dt.getDate()).padStart(2,'0');
-    const hours = String(dt.getHours()).padStart(2,'0');
-    const minutes = String(dt.getMinutes()).padStart(2,'0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+let wdData = [];
+
+async function fetchData(){
+  const res = await fetch(WEB_APP_URL);
+  wdData = await res.json();
+  renderTable();
 }
 
-// Inisialisasi data
-let wdData = JSON.parse(localStorage.getItem('wdData')) || {
-    EDAN777: [], REPUBLIK62: [], ISTANA62: [], WARGA62: []
-};
-
-const wdForm = document.getElementById('wdForm');
-const wdTableBody = document.querySelector('#wdTable tbody');
-const siteSelect = document.getElementById('siteSelect');
-
-function renderTable(situs) {
-    wdTableBody.innerHTML = '';
-    wdData[situs].forEach((item, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${format24Jam(item.jam)}</td>
-            <td><a href="${item.link}" target="_blank">Link</a></td>
-            <td><img src="${item.gambar}" alt="Gambar" onclick="showModal(this.src)"></td>
-            <td>
-                <button class="edit" onclick="editRow(this, ${index})">Edit</button>
-                <button class="delete" onclick="deleteRow(${index})">Hapus</button>
-            </td>
-        `;
-        wdTableBody.appendChild(row);
-    });
-}
-
-// Tambah data baru
-wdForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    const situs = siteSelect.value;
-    const jamWD = document.getElementById('jamWD').value;
-    const linkBukti = document.getElementById('linkBukti').value;
-    const gambarURL = document.getElementById('gambarURL').value;
-
-    wdData[situs].push({ jam: jamWD, link: linkBukti, gambar: gambarURL });
-    localStorage.setItem('wdData', JSON.stringify(wdData));
-    renderTable(situs);
-    wdForm.reset();
-});
-
-// Edit inline
-function editRow(btn, index){
-    const situs = siteSelect.value;
-    const row = btn.closest('tr');
-    const item = wdData[situs][index];
+function renderTable(){
+  const tbody = document.getElementById('wdTableBody');
+  tbody.innerHTML = '';
+  wdData.forEach((item,index)=>{
+    const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input class="inline" type="datetime-local" value="${formatInputValue(item.jam)}"></td>
-        <td><input class="inline" type="url" value="${item.link}"></td>
-        <td><input class="inline" type="url" value="${item.gambar}"></td>
-        <td>
-            <button class="save" onclick="saveRow(this, ${index})">Simpan</button>
-            <button class="cancel" onclick="cancelEdit(${index})">Batal</button>
-        </td>
+      <td>${item.Situs}</td>
+      <td>${format24Jam(item['Jam WD'])}</td>
+      <td><a href="${item['Link Bukti']}" target="_blank">Link</a></td>
+      <td><img src="${item['Gambar']}" onclick="showModal(this.src)"></td>
+      <td>
+        <button onclick="editRow(${index})">Edit</button>
+        <button onclick="deleteRow(${index})">Hapus</button>
+      </td>
     `;
+    tbody.appendChild(row);
+  });
+}
+
+// Modal
+function showModal(src){ document.getElementById('modalImg').src=src; document.getElementById('imgModal').style.display='block'; }
+
+// Tambah data
+async function addData(){
+  const situs = document.getElementById('siteSelectAdd').value;
+  const jam = document.getElementById('jamWDAdd').value;
+  const link = document.getElementById('linkBuktiAdd').value;
+  const gambar = document.getElementById('gambarURLAdd').value;
+  await fetch(`${WEB_APP_URL}?action=add&situs=${encodeURIComponent(situs)}&jam=${encodeURIComponent(jam)}&link=${encodeURIComponent(link)}&gambar=${encodeURIComponent(gambar)}`);
+  fetchData();
+}
+
+// Edit data
+function editRow(index){
+  const item = wdData[index];
+  const row = document.getElementById('wdTableBody').children[index];
+  row.innerHTML = `
+    <td><input class="inline" value="${item.Situs}"></td>
+    <td><input class="inline" type="datetime-local" value="${item['Jam WD']}"></td>
+    <td><input class="inline" type="url" value="${item['Link Bukti']}"></td>
+    <td><input class="inline" type="url" value="${item['Gambar']}"></td>
+    <td>
+      <button onclick="saveRow(${index})">Simpan</button>
+      <button onclick="fetchData()">Batal</button>
+    </td>
+  `;
 }
 
 // Simpan edit
-function saveRow(btn, index){
-    const situs = siteSelect.value;
-    const row = btn.closest('tr');
-    const inputs = row.querySelectorAll('input');
-    wdData[situs][index] = {
-        jam: inputs[0].value,
-        link: inputs[1].value,
-        gambar: inputs[2].value
-    };
-    localStorage.setItem('wdData', JSON.stringify(wdData));
-    renderTable(situs);
+async function saveRow(index){
+  const row = document.getElementById('wdTableBody').children[index];
+  const inputs = row.querySelectorAll('input');
+  await fetch(`${WEB_APP_URL}?action=edit&index=${index}&situs=${encodeURIComponent(inputs[0].value)}&jam=${encodeURIComponent(inputs[1].value)}&link=${encodeURIComponent(inputs[2].value)}&gambar=${encodeURIComponent(inputs[3].value)}`);
+  fetchData();
 }
 
-// Batal edit
-function cancelEdit(index){ renderTable(siteSelect.value); }
-
-// Hapus
-function deleteRow(index){
-    const situs = siteSelect.value;
-    if(confirm('Yakin ingin menghapus data ini?')){
-        wdData[situs].splice(index,1);
-        localStorage.setItem('wdData', JSON.stringify(wdData));
-        renderTable(situs);
-    }
+// Hapus data
+async function deleteRow(index){
+  if(confirm('Yakin ingin menghapus data ini?')){
+    await fetch(`${WEB_APP_URL}?action=delete&index=${index}`);
+    fetchData();
+  }
 }
 
-// Modal gambar
-function showModal(src){
-    document.getElementById('modalImg').src = src;
-    document.getElementById('imgModal').style.display = "block";
-}
-function closeModal(){
-    document.getElementById('imgModal').style.display = "none";
-}
-
-// Dropdown situs
-siteSelect.addEventListener('change', function(){ renderTable(this.value); });
-
-// Render awal
-renderTable(siteSelect.value);
+fetchData();
 </script>
 
 </body>
