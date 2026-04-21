@@ -3,138 +3,344 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WD Log Interaktif Otomatis</title>
+<title>WD Log Ultimate</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-body{font-family:Arial;margin:20px;}
-table{width:100%;border-collapse:collapse;margin-top:20px;}
-th,td{border:1px solid #ccc;padding:8px;text-align:center;}
-th{background:#007bff;color:white;}
-td img{width:80px;cursor:pointer;}
-input,select,button{padding:5px;margin:5px 0;}
-button{cursor:pointer;}
-.modal{display:none;position:fixed;z-index:1000;padding-top:60px;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.8);}
-.modal-content{display:block;margin:auto;max-width:90%;max-height:80%;}
-.close{position:absolute;top:20px;right:35px;color:white;font-size:40px;cursor:pointer;}
-input.inline{width:90%;}
+body{
+  font-family:'Poppins';
+  margin:0;
+  background:#0f172a;
+  color:white;
+  padding:20px;
+}
+
+/* TOP */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+select{
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  background:#1e293b;
+  color:white;
+}
+
+.btn{
+  padding:10px 15px;
+  border-radius:10px;
+  border:none;
+  background:linear-gradient(45deg,#3b82f6,#9333ea);
+  color:white;
+  cursor:pointer;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  border:1px solid #334155;
+  padding:8px;
+  text-align:center;
+}
+
+th{background:#3b82f6;}
+
+/* IMAGE */
+td img{
+  width:70px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.3s;
+}
+td img:hover{
+  transform:scale(1.1);
+}
+
+/* IMAGE MODAL */
+.img-modal{
+  display:none;
+  position:fixed;
+  left:0;top:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
+}
+
+.img-modal img{
+  max-width:90%;
+  max-height:90%;
+  animation:zoom .3s;
+}
+
+@keyframes zoom{
+  from{transform:scale(.7)}
+  to{transform:scale(1)}
+}
+
+/* FORM MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  left:0;top:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+}
+
+.form-box{
+  background:#111827;
+  padding:25px;
+  border-radius:16px;
+  width:350px;
+}
+
+/* INPUT */
+.form-group{margin-bottom:10px;}
+.form-group input,.form-group select{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#1f2937;
+  color:white;
+}
+
+/* PREVIEW */
+#preview{
+  width:100%;
+  border-radius:10px;
+  margin-top:10px;
+  display:none;
+}
+
+/* TOAST */
+#toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#111;
+  padding:10px 20px;
+  border-radius:10px;
+  opacity:0;
+  transition:.3s;
+}
+#toast.show{opacity:1;}
+
+/* LOADING */
+#loading{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
 </style>
 </head>
+
 <body>
 
-<h2>WD Log 24 Jam Interaktif</h2>
+<h2>Bukti WD Web Depan</h2>
 
-<h3>Tambah Data</h3>
-<label>Pilih Situs:</label>
-<select id="siteSelectAdd"></select>
-<input type="datetime-local" id="jamWDAdd">
-<input type="url" id="linkBuktiAdd" placeholder="Link Bukti">
-<input type="url" id="gambarURLAdd" placeholder="URL Gambar">
-<button onclick="addData()">Tambah</button>
+<div class="topbar">
+  <select id="siteFilter"></select>
+  <button class="btn" onclick="openForm()">+ Tambah</button>
+</div>
 
 <table>
 <thead>
-<tr><th>Situs</th><th>Jam WD</th><th>Link Bukti</th><th>Gambar</th><th>Aksi</th></tr>
+<tr>
+<th>Situs</th>
+<th>Jam</th>
+<th>Link</th>
+<th>Gambar</th>
+<th>Aksi</th>
+</tr>
 </thead>
 <tbody id="wdTableBody"></tbody>
 </table>
 
-<div id="imgModal" class="modal">
-<span class="close" onclick="document.getElementById('imgModal').style.display='none'">&times;</span>
-<img class="modal-content" id="modalImg">
+<!-- IMAGE MODAL -->
+<div id="imgModal" class="img-modal" onclick="this.style.display='none'">
+  <img id="modalImg">
 </div>
 
+<!-- FORM MODAL -->
+<div id="formModal" class="modal" onclick="outsideClose(event)">
+<div class="form-box">
+<h3 id="formTitle">Tambah</h3>
+
+<div class="form-group">
+<select id="siteSelect"></select>
+</div>
+
+<div class="form-group">
+<input type="datetime-local" id="jam">
+</div>
+
+<div class="form-group">
+<input id="link" placeholder="Link Bukti">
+</div>
+
+<div class="form-group">
+<input id="gambar" placeholder="URL Gambar" oninput="previewImg()">
+<img id="preview">
+</div>
+
+<button class="btn" onclick="save()">Simpan</button>
+</div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- LOADING -->
+<div id="loading">Loading...</div>
+
 <script>
-const WEB_APP_URL="https://script.google.com/macros/s/AKfycbypNc1DGe8O1IqWq9Ufibv7BDdvQlAG5mkS8PFx_TDVqzHg9uI1pgxZ9r5nqU1LRh2tHQ/exec"; // ganti dengan Web App URL Anda
-let wdData=[];
+const API="https://script.google.com/macros/s/AKfycbypNc1DGe8O1IqWq9Ufibv7BDdvQlAG5mkS8PFx_TDVqzHg9uI1pgxZ9r5nqU1LRh2tHQ/exec";
 
-function format24Jam(datetimeStr){
-  if(!datetimeStr) return '';
-  const dt=new Date(datetimeStr);
-  return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' +
-         String(dt.getDate()).padStart(2,'0') + ' ' +
-         String(dt.getHours()).padStart(2,'0') + ':' + String(dt.getMinutes()).padStart(2,'0');
+let data=[],editIndex=null;
+
+/* TOAST */
+function showToast(msg){
+  toast.innerText=msg;
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"),2000);
 }
 
-async function fetchData(){
-  const res = await fetch(WEB_APP_URL);
-  wdData = await res.json();
+/* LOADING */
+function showLoading(v){
+  loading.style.display=v?'flex':'none';
+}
+
+/* LOAD */
+async function load(){
+  const res=await fetch(API);
+  data=await res.json();
+  render();
   updateDropdown();
-  renderTable();
 }
 
+/* AUTO REFRESH */
+setInterval(load,5000);
+
+/* DROPDOWN */
 function updateDropdown(){
-  const select=document.getElementById('siteSelectAdd');
-  const sites=[...new Set(wdData.map(d=>d.Situs))];
-  select.innerHTML = sites.map(s=>`<option value="${s}">${s}</option>`).join('');
+  const sites=[...new Set(data.map(d=>d.Situs))];
+  siteFilter.innerHTML=sites.map(s=>`<option>${s}</option>`).join('');
+  siteSelect.innerHTML=siteFilter.innerHTML;
 }
 
-function renderTable(){
-  const tbody=document.getElementById('wdTableBody');
-  tbody.innerHTML='';
-  const selectedSite=document.getElementById('siteSelectAdd').value;
-  wdData.forEach((item,index)=>{
-    if(item.Situs!==selectedSite) return;
-    const row=document.createElement('tr');
-    row.innerHTML=`
-      <td>${item.Situs}</td>
-      <td>${format24Jam(item['Jam WD'])}</td>
-      <td><a href="${item['Link Bukti']}" target="_blank">Link</a></td>
-      <td><img src="${item['Gambar']}" onclick="showModal(this.src)"></td>
+/* RENDER */
+function render(){
+  const f=siteFilter.value;
+  wdTableBody.innerHTML='';
+
+  data.forEach((d,i)=>{
+    if(d.Situs!==f) return;
+
+    wdTableBody.innerHTML+=`
+    <tr>
+      <td>${d.Situs}</td>
+      <td>${new Date(d['Jam WD']).toLocaleString()}</td>
+      <td><a href="${d['Link Bukti']}" target="_blank">Link</a></td>
       <td>
-        <button onclick="editRow(${index})">Edit</button>
-        <button onclick="deleteRow(${index})">Hapus</button>
-      </td>`;
-    tbody.appendChild(row);
+        <img src="${d['Gambar']}" onclick="showImg('${d['Gambar']}')">
+      </td>
+      <td>
+        <button onclick="edit(${i})">Edit</button>
+        <button onclick="del(${i})">Hapus</button>
+      </td>
+    </tr>`;
   });
 }
 
-function showModal(src){
-  document.getElementById('modalImg').src=src;
-  document.getElementById('imgModal').style.display='block';
+/* IMAGE CLICK */
+function showImg(src){
+  modalImg.src=src;
+  imgModal.style.display='flex';
 }
 
-async function addData(){
-  const situs=document.getElementById('siteSelectAdd').value;
-  const jam=document.getElementById('jamWDAdd').value;
-  const link=document.getElementById('linkBuktiAdd').value;
-  const gambar=document.getElementById('gambarURLAdd').value;
-  await fetch(`${WEB_APP_URL}?action=add&situs=${encodeURIComponent(situs)}&jam=${encodeURIComponent(jam)}&link=${encodeURIComponent(link)}&gambar=${encodeURIComponent(gambar)}`);
-  document.getElementById('jamWDAdd').value='';
-  document.getElementById('linkBuktiAdd').value='';
-  document.getElementById('gambarURLAdd').value='';
-  fetchData();
+/* PREVIEW */
+function previewImg(){
+  preview.src=gambar.value;
+  preview.style.display='block';
 }
 
-function editRow(index){
-  const item=wdData[index];
-  const row=document.getElementById('wdTableBody').children[index];
-  row.innerHTML=`
-    <td><input class="inline" value="${item.Situs}"></td>
-    <td><input class="inline" type="datetime-local" value="${item['Jam WD']}"></td>
-    <td><input class="inline" type="url" value="${item['Link Bukti']}"></td>
-    <td><input class="inline" type="url" value="${item['Gambar']}"></td>
-    <td>
-      <button onclick="saveRow(${index})">Simpan</button>
-      <button onclick="fetchData()">Batal</button>
-    </td>`;
+/* FORM */
+function openForm(){
+  editIndex=null;
+  formModal.style.display='flex';
+  preview.style.display='none';
 }
 
-async function saveRow(index){
-  const row=document.getElementById('wdTableBody').children[index];
-  const inputs=row.querySelectorAll('input');
-  await fetch(`${WEB_APP_URL}?action=edit&index=${index}&situs=${encodeURIComponent(inputs[0].value)}&jam=${encodeURIComponent(inputs[1].value)}&link=${encodeURIComponent(inputs[2].value)}&gambar=${encodeURIComponent(inputs[3].value)}`);
-  fetchData();
+function edit(i){
+  const d=data[i];
+  editIndex=i;
+
+  formModal.style.display='flex';
+
+  siteSelect.value=d.Situs;
+  jam.value=d['Jam WD'];
+  link.value=d['Link Bukti'];
+  gambar.value=d['Gambar'];
+  previewImg();
 }
 
-async function deleteRow(index){
-  if(confirm('Yakin ingin menghapus data ini?')){
-    await fetch(`${WEB_APP_URL}?action=delete&index=${index}`);
-    fetchData();
+/* SAVE */
+async function save(){
+  if(!jam.value || !link.value){
+    showToast("Data belum lengkap!");
+    return;
+  }
+
+  showLoading(true);
+
+  await fetch(`${API}?action=${editIndex!=null?'edit':'add'}&index=${editIndex}&situs=${siteSelect.value}&jam=${jam.value}&link=${link.value}&gambar=${gambar.value}`);
+
+  showLoading(false);
+  closeForm();
+  showToast("Berhasil disimpan!");
+  load();
+}
+
+/* DELETE */
+async function del(i){
+  if(confirm("Hapus data?")){
+    await fetch(`${API}?action=delete&index=${i}`);
+    showToast("Terhapus!");
+    load();
   }
 }
 
-document.getElementById('siteSelectAdd').addEventListener('change',()=>renderTable());
+/* CLOSE */
+function closeForm(){
+  formModal.style.display='none';
+}
 
-fetchData();
+function outsideClose(e){
+  if(e.target.id==="formModal") closeForm();
+}
+
+siteFilter.onchange=render;
+
+load();
 </script>
 
 </body>
