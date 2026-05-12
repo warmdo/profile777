@@ -1,128 +1,176 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
 <title>WD Log Ultimate</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{
-  font-family:'Poppins';
+
+*{
   margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
   background:#0f172a;
   color:white;
   padding:20px;
 }
 
-/* TOP */
+/* TITLE */
+h2{
+  margin-bottom:20px;
+  font-size:28px;
+}
+
+/* TOPBAR */
 .topbar{
   display:flex;
+  gap:10px;
   justify-content:space-between;
+  align-items:center;
   margin-bottom:20px;
+  flex-wrap:wrap;
 }
 
-select{
-  padding:10px;
-  border-radius:10px;
+select,
+input{
+  width:100%;
+  padding:12px;
   border:none;
+  border-radius:10px;
   background:#1e293b;
   color:white;
+  outline:none;
 }
 
+/* BUTTON */
 .btn{
-  padding:10px 15px;
-  border-radius:10px;
+  padding:12px 18px;
   border:none;
+  border-radius:10px;
   background:linear-gradient(45deg,#3b82f6,#9333ea);
   color:white;
   cursor:pointer;
+  font-weight:600;
+  transition:.2s;
+}
+
+.btn:hover{
+  opacity:.9;
+  transform:translateY(-1px);
 }
 
 /* TABLE */
+.table-wrap{
+  overflow-x:auto;
+  border-radius:16px;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
+  background:#111827;
 }
 
-th,td{
-  border:1px solid #334155;
-  padding:8px;
+th{
+  background:#2563eb;
+  padding:14px;
+  white-space:nowrap;
+}
+
+td{
+  padding:12px;
+  border-bottom:1px solid #1f2937;
   text-align:center;
 }
 
-th{background:#3b82f6;}
+tr:hover{
+  background:#1e293b;
+}
 
 /* IMAGE */
 td img{
   width:70px;
-  border-radius:8px;
+  height:70px;
+  object-fit:cover;
+  border-radius:10px;
   cursor:pointer;
   transition:.3s;
 }
+
 td img:hover{
-  transform:scale(1.1);
+  transform:scale(1.08);
 }
 
-/* IMAGE MODAL */
+/* ACTION BUTTON */
+.action-btn{
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  margin:2px;
+  font-size:13px;
+}
+
+.edit-btn{
+  background:#f59e0b;
+}
+
+.delete-btn{
+  background:#ef4444;
+}
+
+/* MODAL */
+.modal,
 .img-modal{
   display:none;
   position:fixed;
-  left:0;top:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.9);
+  inset:0;
+  background:rgba(0,0,0,.7);
+  z-index:100;
   justify-content:center;
   align-items:center;
 }
 
-.img-modal img{
-  max-width:90%;
-  max-height:90%;
-  animation:zoom .3s;
-}
-
-@keyframes zoom{
-  from{transform:scale(.7)}
-  to{transform:scale(1)}
-}
-
-/* FORM MODAL */
-.modal{
-  display:none;
-  position:fixed;
-  left:0;top:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.6);
-  justify-content:center;
-  align-items:center;
-}
-
+/* FORM */
 .form-box{
   background:#111827;
+  width:100%;
+  max-width:420px;
   padding:25px;
-  border-radius:16px;
-  width:350px;
+  border-radius:18px;
 }
 
-/* INPUT */
-.form-group{margin-bottom:10px;}
-.form-group input,.form-group select{
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:#1f2937;
-  color:white;
+.form-box h3{
+  margin-bottom:20px;
+}
+
+.form-group{
+  margin-bottom:15px;
 }
 
 /* PREVIEW */
 #preview{
   width:100%;
-  border-radius:10px;
+  border-radius:12px;
   margin-top:10px;
   display:none;
+}
+
+/* IMAGE MODAL */
+.img-modal img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:16px;
 }
 
 /* TOAST */
@@ -131,59 +179,124 @@ td img:hover{
   bottom:20px;
   left:50%;
   transform:translateX(-50%);
-  background:#111;
-  padding:10px 20px;
-  border-radius:10px;
+  background:#111827;
+  padding:12px 22px;
+  border-radius:12px;
   opacity:0;
   transition:.3s;
+  z-index:999;
 }
-#toast.show{opacity:1;}
+
+#toast.show{
+  opacity:1;
+}
 
 /* LOADING */
 #loading{
-  position:fixed;
-  top:0;left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.6);
   display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  z-index:9999;
   justify-content:center;
   align-items:center;
+  font-size:22px;
+  font-weight:600;
 }
+
+/* EMPTY */
+.empty{
+  padding:30px;
+  color:#94a3b8;
+}
+
+/* PASTE AREA */
+#pasteArea{
+  border:2px dashed #475569;
+  padding:20px;
+  border-radius:14px;
+  text-align:center;
+  color:#94a3b8;
+  margin-top:12px;
+  transition:.3s;
+  cursor:pointer;
+}
+
+#pasteArea.active{
+  border-color:#3b82f6;
+  background:#1e293b;
+}
+
+#pasteArea:focus{
+  outline:2px solid #3b82f6;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+
+  h2{
+    font-size:22px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  td,th{
+    font-size:13px;
+  }
+}
+
 </style>
 </head>
 
 <body>
 
-<h2>Bukti WD Web Depan</h2>
+<h2>WD Log Ultimate</h2>
 
 <div class="topbar">
-  <select id="siteFilter"></select>
-  <button class="btn" onclick="openForm()">+ Tambah</button>
+
+  <div style="flex:1">
+    <select id="siteFilter"></select>
+  </div>
+
+  <button class="btn" onclick="openForm()">
+    + Tambah Data
+  </button>
+
 </div>
 
+<div class="table-wrap">
+
 <table>
+
 <thead>
 <tr>
-<th>Situs</th>
-<th>Jam</th>
-<th>Link</th>
-<th>Gambar</th>
-<th>Aksi</th>
+  <th>Situs</th>
+  <th>Jam WD</th>
+  <th>Link</th>
+  <th>Gambar</th>
+  <th>Aksi</th>
 </tr>
 </thead>
+
 <tbody id="wdTableBody"></tbody>
+
 </table>
 
+</div>
+
 <!-- IMAGE MODAL -->
-<div id="imgModal" class="img-modal" onclick="this.style.display='none'">
+<div class="img-modal" id="imgModal" onclick="closeImg()">
   <img id="modalImg">
 </div>
 
 <!-- FORM MODAL -->
-<div id="formModal" class="modal" onclick="outsideClose(event)">
+<div class="modal" id="formModal" onclick="outsideClose(event)">
+
 <div class="form-box">
-<h3 id="formTitle">Tambah</h3>
+
+<h3 id="formTitle">Tambah Data</h3>
 
 <div class="form-group">
 <select id="siteSelect"></select>
@@ -194,15 +307,32 @@ td img:hover{
 </div>
 
 <div class="form-group">
-<input id="link" placeholder="Link Bukti">
+<input type="text" id="link" placeholder="Link Bukti">
 </div>
 
 <div class="form-group">
-<input id="gambar" placeholder="URL Gambar" oninput="previewImg()">
+
+<input
+  type="text"
+  id="gambar"
+  placeholder="URL Gambar"
+  oninput="previewImg()"
+>
+
 <img id="preview">
+
+<div id="pasteArea" tabindex="0">
+  Klik lalu CTRL + V gambar
+  <br><br>
+  atau Drag & Drop gambar
 </div>
 
-<button class="btn" onclick="save()">Simpan</button>
+</div>
+
+<button class="btn" onclick="save()">
+Simpan
+</button>
+
 </div>
 </div>
 
@@ -210,135 +340,644 @@ td img:hover{
 <div id="toast"></div>
 
 <!-- LOADING -->
-<div id="loading">Loading...</div>
+<div id="loading">
+Loading...
+</div>
 
 <script>
-const API="https://script.google.com/macros/s/AKfycbypNc1DGe8O1IqWq9Ufibv7BDdvQlAG5mkS8PFx_TDVqzHg9uI1pgxZ9r5nqU1LRh2tHQ/exec";
 
-let data=[],editIndex=null;
+/* =========================
+   API
+========================= */
 
-/* TOAST */
+const API =
+"https://script.google.com/macros/s/AKfycbypNc1DGe8O1IqWq9Ufibv7BDdvQlAG5mkS8PFx_TDVqzHg9uI1pgxZ9r5nqU1LRh2tHQ/exec";
+
+/* =========================
+   IMGBB API
+========================= */
+
+const IMGBB_API =
+"3a41bb4dd27282cf62dae58882df7b54";
+
+/* =========================
+   GLOBAL
+========================= */
+
+let data = [];
+let editIndex = null;
+
+/* =========================
+   ESCAPE
+========================= */
+
+function esc(str){
+
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+/* =========================
+   TOAST
+========================= */
+
 function showToast(msg){
-  toast.innerText=msg;
+
+  const toast =
+    document.getElementById("toast");
+
+  toast.innerText = msg;
+
   toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"),2000);
+
+  setTimeout(()=>{
+
+    toast.classList.remove("show");
+
+  },2000);
 }
 
-/* LOADING */
+/* =========================
+   LOADING
+========================= */
+
 function showLoading(v){
-  loading.style.display=v?'flex':'none';
+
+  document.getElementById("loading")
+    .style.display =
+      v ? "flex" : "none";
 }
 
-/* LOAD */
+/* =========================
+   LOAD
+========================= */
+
 async function load(){
-  const res=await fetch(API);
-  data=await res.json();
-  render();
-  updateDropdown();
+
+  try{
+
+    showLoading(true);
+
+    const res =
+      await fetch(API);
+
+    data =
+      await res.json();
+
+    updateDropdown();
+
+    render();
+
+  }catch(err){
+
+    console.log(err);
+
+    showToast("Gagal load data");
+
+  }finally{
+
+    showLoading(false);
+  }
 }
 
+/* =========================
+   DROPDOWN
+========================= */
 
-/* DROPDOWN */
 function updateDropdown(){
-  const sites=[...new Set(data.map(d=>d.Situs))];
-  siteFilter.innerHTML=sites.map(s=>`<option>${s}</option>`).join('');
-  siteSelect.innerHTML=siteFilter.innerHTML;
+
+  const sites =
+    [...new Set(data.map(d=>d.Situs))];
+
+  document.getElementById("siteFilter")
+    .innerHTML =
+
+      `<option value="all">
+        Semua Situs
+      </option>` +
+
+      sites.map(s=>`
+
+        <option value="${esc(s)}">
+          ${esc(s)}
+        </option>
+
+      `).join("");
+
+  document.getElementById("siteSelect")
+    .innerHTML =
+
+      sites.map(s=>`
+
+        <option value="${esc(s)}">
+          ${esc(s)}
+        </option>
+
+      `).join("");
 }
 
-/* RENDER */
+/* =========================
+   RENDER
+========================= */
+
 function render(){
-  const f=siteFilter.value;
-  wdTableBody.innerHTML='';
+
+  const tbody =
+    document.getElementById("wdTableBody");
+
+  const filter =
+    document.getElementById("siteFilter").value;
+
+  tbody.innerHTML = "";
 
   data.forEach((d,i)=>{
-    if(d.Situs!==f) return;
 
-    wdTableBody.innerHTML+=`
-    <tr>
-      <td>${d.Situs}</td>
-      <td>${new Date(d['Jam WD']).toLocaleString()}</td>
-      <td><a href="${d['Link Bukti']}" target="_blank">Link</a></td>
-      <td>
-        <img src="${d['Gambar']}" onclick="showImg('${d['Gambar']}')">
-      </td>
-      <td>
-        <button onclick="edit(${i})">Edit</button>
-        <button onclick="del(${i})">Hapus</button>
-      </td>
-    </tr>`;
+    if(filter !== "all" &&
+       d.Situs !== filter) return;
+
+    tbody.innerHTML += `
+
+      <tr>
+
+        <td>${esc(d.Situs)}</td>
+
+        <td>
+          ${new Date(d["Jam WD"])
+            .toLocaleString()}
+        </td>
+
+        <td>
+
+          <a
+            href="${esc(d["Link Bukti"])}"
+            target="_blank"
+            style="color:#60a5fa">
+
+            Buka
+
+          </a>
+
+        </td>
+
+        <td>
+
+          <img
+            src="${esc(d["Gambar"])}"
+
+            onclick="
+              showImg('${esc(d["Gambar"])}')
+            "
+
+            onerror="
+              this.src=
+              'https://via.placeholder.com/70?text=Error'
+            "
+          >
+
+        </td>
+
+        <td>
+
+          <button
+            class="action-btn edit-btn"
+            onclick="edit(${i})">
+
+            Edit
+
+          </button>
+
+          <button
+            class="action-btn delete-btn"
+            onclick="del(${i})">
+
+            Hapus
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    `;
   });
+
+  if(tbody.innerHTML === ""){
+
+    tbody.innerHTML = `
+
+      <tr>
+        <td colspan="5" class="empty">
+          Tidak ada data
+        </td>
+      </tr>
+
+    `;
+  }
 }
 
-/* IMAGE CLICK */
-function showImg(src){
-  modalImg.src=src;
-  imgModal.style.display='flex';
-}
+/* =========================
+   FILTER
+========================= */
 
-/* PREVIEW */
-function previewImg(){
-  preview.src=gambar.value;
-  preview.style.display='block';
-}
+document.getElementById("siteFilter")
+  .addEventListener("change",render);
 
-/* FORM */
+/* =========================
+   OPEN FORM
+========================= */
+
 function openForm(){
-  editIndex=null;
-  formModal.style.display='flex';
-  preview.style.display='none';
+
+  editIndex = null;
+
+  document.getElementById("formTitle")
+    .innerText = "Tambah Data";
+
+  document.getElementById("formModal")
+    .style.display = "flex";
+
+  document.getElementById("jam").value = "";
+
+  document.getElementById("link").value = "";
+
+  document.getElementById("gambar").value = "";
+
+  document.getElementById("preview")
+    .style.display = "none";
 }
 
-function edit(i){
-  const d=data[i];
-  editIndex=i;
+/* =========================
+   CLOSE FORM
+========================= */
 
-  formModal.style.display='flex';
-
-  siteSelect.value=d.Situs;
-  jam.value=d['Jam WD'];
-  link.value=d['Link Bukti'];
-  gambar.value=d['Gambar'];
-  previewImg();
-}
-
-/* SAVE */
-async function save(){
-  if(!jam.value || !link.value){
-    showToast("Data belum lengkap!");
-    return;
-  }
-
-  showLoading(true);
-
-  await fetch(`${API}?action=${editIndex!=null?'edit':'add'}&index=${editIndex}&situs=${siteSelect.value}&jam=${jam.value}&link=${link.value}&gambar=${gambar.value}`);
-
-  showLoading(false);
-  closeForm();
-  showToast("Berhasil disimpan!");
-  load();
-}
-
-/* DELETE */
-async function del(i){
-  if(confirm("Hapus data?")){
-    await fetch(`${API}?action=delete&index=${i}`);
-    showToast("Terhapus!");
-    load();
-  }
-}
-
-/* CLOSE */
 function closeForm(){
-  formModal.style.display='none';
+
+  document.getElementById("formModal")
+    .style.display = "none";
 }
 
 function outsideClose(e){
-  if(e.target.id==="formModal") closeForm();
+
+  if(e.target.id === "formModal")
+    closeForm();
 }
 
-siteFilter.onchange=render;
+/* =========================
+   PREVIEW
+========================= */
+
+function previewImg(){
+
+  const val =
+    document.getElementById("gambar").value;
+
+  const preview =
+    document.getElementById("preview");
+
+  if(!val){
+
+    preview.style.display = "none";
+
+    return;
+  }
+
+  preview.src = val;
+
+  preview.style.display = "block";
+}
+
+/* =========================
+   SHOW IMAGE
+========================= */
+
+function showImg(src){
+
+  document.getElementById("modalImg")
+    .src = src;
+
+  document.getElementById("imgModal")
+    .style.display = "flex";
+}
+
+function closeImg(){
+
+  document.getElementById("imgModal")
+    .style.display = "none";
+}
+
+/* =========================
+   EDIT
+========================= */
+
+function edit(i){
+
+  const d = data[i];
+
+  editIndex = i;
+
+  document.getElementById("formTitle")
+    .innerText = "Edit Data";
+
+  document.getElementById("formModal")
+    .style.display = "flex";
+
+  document.getElementById("siteSelect")
+    .value = d.Situs;
+
+  document.getElementById("jam")
+    .value = d["Jam WD"];
+
+  document.getElementById("link")
+    .value = d["Link Bukti"];
+
+  document.getElementById("gambar")
+    .value = d["Gambar"];
+
+  previewImg();
+}
+
+/* =========================
+   SAVE
+========================= */
+
+async function save(){
+
+  const jam =
+    document.getElementById("jam").value;
+
+  const link =
+    document.getElementById("link").value;
+
+  const gambar =
+    document.getElementById("gambar").value;
+
+  const situs =
+    document.getElementById("siteSelect").value;
+
+  if(!jam || !link){
+
+    showToast("Data belum lengkap!");
+
+    return;
+  }
+
+  try{
+
+    showLoading(true);
+
+    const params =
+      new URLSearchParams({
+
+        action:
+          editIndex != null
+            ? "edit"
+            : "add",
+
+        index: editIndex,
+
+        situs,
+
+        jam,
+
+        link,
+
+        gambar
+
+      });
+
+    await fetch(`${API}?${params}`);
+
+    showToast("Berhasil disimpan!");
+
+    closeForm();
+
+    load();
+
+  }catch(err){
+
+    console.log(err);
+
+    showToast("Gagal menyimpan");
+
+  }finally{
+
+    showLoading(false);
+  }
+}
+
+/* =========================
+   DELETE
+========================= */
+
+async function del(i){
+
+  if(!confirm("Hapus data ini?"))
+    return;
+
+  try{
+
+    showLoading(true);
+
+    await fetch(
+      `${API}?action=delete&index=${i}`
+    );
+
+    showToast("Data terhapus");
+
+    load();
+
+  }catch(err){
+
+    console.log(err);
+
+    showToast("Gagal menghapus");
+
+  }finally{
+
+    showLoading(false);
+  }
+}
+
+/* =========================
+   PASTE AREA
+========================= */
+
+const pasteArea =
+  document.getElementById("pasteArea");
+
+/* =========================
+   PASTE IMAGE
+========================= */
+
+pasteArea.addEventListener(
+  "paste",
+  (e)=>{
+
+    const items =
+      (e.clipboardData ||
+      e.originalEvent.clipboardData).items;
+
+    for(const item of items){
+
+      if(item.type.indexOf("image") === 0){
+
+        const file =
+          item.getAsFile();
+
+        uploadImage(file);
+      }
+    }
+  }
+);
+
+/* =========================
+   DRAG OVER
+========================= */
+
+pasteArea.addEventListener(
+  "dragover",
+  (e)=>{
+
+    e.preventDefault();
+
+    pasteArea.classList.add("active");
+  }
+);
+
+/* =========================
+   DRAG LEAVE
+========================= */
+
+pasteArea.addEventListener(
+  "dragleave",
+  ()=>{
+
+    pasteArea.classList.remove("active");
+  }
+);
+
+/* =========================
+   DROP
+========================= */
+
+pasteArea.addEventListener(
+  "drop",
+  (e)=>{
+
+    e.preventDefault();
+
+    pasteArea.classList.remove("active");
+
+    const file =
+      e.dataTransfer.files[0];
+
+    if(file){
+
+      uploadImage(file);
+    }
+  }
+);
+
+/* =========================
+   UPLOAD IMAGE
+========================= */
+
+async function uploadImage(file){
+
+  try{
+
+    showLoading(true);
+
+    showToast("Uploading...");
+
+    /* FILE -> BASE64 */
+    const reader =
+      new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = async ()=>{
+
+      try{
+
+        const base64 =
+          reader.result.split(",")[1];
+
+        const formData =
+          new FormData();
+
+        formData.append(
+          "image",
+          base64
+        );
+
+        const res =
+          await fetch(
+
+            `https://api.imgbb.com/1/upload?key=${IMGBB_API}`,
+
+            {
+              method:"POST",
+              body:formData
+            }
+          );
+
+        const json =
+          await res.json();
+
+        console.log(json);
+
+        if(!json.success){
+
+          showToast(
+            json.error?.message ||
+            "Upload gagal"
+          );
+
+          return;
+        }
+
+        const url =
+          json.data.url;
+
+        document.getElementById("gambar")
+          .value = url;
+
+        previewImg();
+
+        showToast("Upload berhasil!");
+
+      }catch(err){
+
+        console.log(err);
+
+        showToast("Gagal upload");
+
+      }finally{
+
+        showLoading(false);
+      }
+    };
+
+  }catch(err){
+
+    console.log(err);
+
+    showToast("Error upload");
+
+    showLoading(false);
+  }
+}
+
+/* =========================
+   START
+========================= */
 
 load();
+
 </script>
 
 </body>
