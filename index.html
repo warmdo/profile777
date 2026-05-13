@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>BUKTI WD BARIS DEPAN</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -24,24 +23,19 @@ body{
   padding:20px;
 }
 
-/* TITLE */
 h2{
   margin-bottom:20px;
   font-size:28px;
 }
 
-/* TOPBAR */
 .topbar{
   display:flex;
   gap:10px;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
   flex-wrap:wrap;
+  margin-bottom:20px;
 }
 
-select,
-input{
+select,input{
   width:100%;
   padding:12px;
   border:none;
@@ -51,7 +45,6 @@ input{
   outline:none;
 }
 
-/* BUTTON */
 .btn{
   padding:12px 18px;
   border:none;
@@ -60,15 +53,8 @@ input{
   color:white;
   cursor:pointer;
   font-weight:600;
-  transition:.2s;
 }
 
-.btn:hover{
-  opacity:.9;
-  transform:translateY(-1px);
-}
-
-/* TABLE */
 .table-wrap{
   overflow-x:auto;
   border-radius:16px;
@@ -83,167 +69,163 @@ table{
 th{
   background:#2563eb;
   padding:14px;
-  white-space:nowrap;
 }
 
 td{
   padding:12px;
-  border-bottom:1px solid #1f2937;
   text-align:center;
+  border-bottom:1px solid #1f2937;
 }
 
-tr:hover{
-  background:#1e293b;
-}
-
-/* IMAGE */
 td img{
   width:70px;
   height:70px;
   object-fit:cover;
   border-radius:10px;
   cursor:pointer;
-  transition:.3s;
+  transition:.2s;
 }
 
 td img:hover{
-  transform:scale(1.08);
+  transform:scale(1.05);
 }
 
-/* ACTION BUTTON */
 .action-btn{
-  padding:8px 12px;
+  padding:6px 10px;
   border:none;
   border-radius:8px;
-  color:white;
-  cursor:pointer;
   margin:2px;
-  font-size:13px;
+  cursor:pointer;
+  color:white;
+  font-size:12px;
 }
 
-.edit-btn{
+.edit{
   background:#f59e0b;
 }
 
-.delete-btn{
+.del{
   background:#ef4444;
 }
 
 /* MODAL */
-.modal,
-.img-modal{
+
+.modal{
   display:none;
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.7);
-  z-index:100;
   justify-content:center;
   align-items:center;
+  padding:20px;
+  z-index:999;
 }
 
-/* FORM */
-.form-box{
+.box{
   background:#111827;
+  padding:20px;
+  border-radius:16px;
   width:100%;
   max-width:420px;
-  padding:25px;
-  border-radius:18px;
 }
 
-.form-box h3{
-  margin-bottom:20px;
-}
-
-.form-group{
+.box h3{
   margin-bottom:15px;
 }
 
-/* PREVIEW */
-#preview{
+#pasteArea{
+  border:2px dashed #475569;
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+  margin-top:10px;
+  transition:.3s;
+}
+
+#pasteArea:hover{
+  border-color:#3b82f6;
+}
+
+#previewImage{
   width:100%;
-  border-radius:12px;
   margin-top:10px;
   display:none;
+  border-radius:10px;
+  max-height:300px;
+  object-fit:cover;
 }
 
-/* IMAGE MODAL */
-.img-modal img{
-  max-width:90%;
-  max-height:90%;
-  border-radius:16px;
-}
-
-/* TOAST */
 #toast{
   position:fixed;
   bottom:20px;
   left:50%;
   transform:translateX(-50%);
   background:#111827;
-  padding:12px 22px;
-  border-radius:12px;
+  padding:12px 20px;
+  border-radius:10px;
   opacity:0;
   transition:.3s;
-  z-index:999;
+  z-index:9999;
 }
 
 #toast.show{
   opacity:1;
 }
 
-/* LOADING */
-#loading{
+/* IMAGE MODAL */
+
+.image-modal{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.6);
-  z-index:9999;
+  background:rgba(0,0,0,.9);
   justify-content:center;
   align-items:center;
-  font-size:22px;
-  font-weight:600;
-}
-
-/* EMPTY */
-.empty{
-  padding:30px;
-  color:#94a3b8;
-}
-
-/* PASTE AREA */
-#pasteArea{
-  border:2px dashed #475569;
-  padding:20px;
-  border-radius:14px;
-  text-align:center;
-  color:#94a3b8;
-  margin-top:12px;
-  transition:.3s;
+  z-index:99999;
   cursor:pointer;
+  padding:20px;
 }
 
-#pasteArea.active{
-  border-color:#3b82f6;
-  background:#1e293b;
+.image-modal img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:16px;
+  object-fit:contain;
+  animation:zoom .2s ease;
 }
 
-#pasteArea:focus{
-  outline:2px solid #3b82f6;
+@keyframes zoom{
+
+  from{
+    transform:scale(.8);
+    opacity:0;
+  }
+
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
 }
 
-/* MOBILE */
-@media(max-width:600px){
+@media(max-width:768px){
+
+  body{
+    padding:15px;
+  }
 
   h2{
     font-size:22px;
   }
 
-  .btn{
-    width:100%;
+  th,td{
+    font-size:13px;
+    padding:10px;
   }
 
-  td,th{
-    font-size:13px;
+  td img{
+    width:60px;
+    height:60px;
   }
 }
 
@@ -256,12 +238,10 @@ td img:hover{
 
 <div class="topbar">
 
-  <div style="flex:1">
-    <select id="siteFilter"></select>
-  </div>
+  <select id="siteFilter"></select>
 
   <button class="btn" onclick="openForm()">
-    + Tambah Data
+    + Tambah
   </button>
 
 </div>
@@ -274,75 +254,65 @@ td img:hover{
 <tr>
   <th>Situs</th>
   <th>Jam WD</th>
-  <th>Link</th>
   <th>Gambar</th>
   <th>Aksi</th>
 </tr>
 </thead>
 
-<tbody id="wdTableBody"></tbody>
+<tbody id="table"></tbody>
 
 </table>
 
 </div>
 
-<!-- IMAGE MODAL -->
-<div class="img-modal" id="imgModal" onclick="closeImg()">
-  <img id="modalImg">
-</div>
-
 <!-- FORM MODAL -->
-<div class="modal" id="formModal" onclick="outsideClose(event)">
 
-<div class="form-box">
+<div class="modal" id="modal" onclick="closeModal(event)">
 
-<h3 id="formTitle">Tambah Data</h3>
+<div class="box">
 
-<div class="form-group">
-<select id="siteSelect"></select>
-</div>
+<h3>Form WD</h3>
 
-<div class="form-group">
+<select id="site">
+  <option>Edan777</option>
+  <option>Republik62</option>
+  <option>Istana62</option>
+  <option>Warga62</option>
+</select>
+
 <input type="datetime-local" id="jam">
-</div>
-
-<div class="form-group">
-<input type="text" id="link" placeholder="Link Bukti">
-</div>
-
-<div class="form-group">
 
 <input
   type="text"
   id="gambar"
-  placeholder="URL Gambar"
-  oninput="previewImg()"
+  placeholder="URL / Base64 Gambar"
+  oninput="updatePreview()"
 >
 
-<img id="preview">
+<img id="previewImage">
 
-<div id="pasteArea" tabindex="0">
-  Klik lalu CTRL + V gambar
-  <br><br>
-  atau Drag & Drop gambar
+<div id="pasteArea">
+  Paste / Drag Gambar di sini
 </div>
 
-</div>
+<br>
 
 <button class="btn" onclick="save()">
-Simpan
+  Simpan
 </button>
 
 </div>
 </div>
 
-<!-- TOAST -->
-<div id="toast"></div>
+<!-- IMAGE VIEWER -->
 
-<!-- LOADING -->
-<div id="loading">
-Loading...
+<div id="imageModal" class="image-modal">
+
+  <img id="modalImage">
+
 </div>
+
+<div id="toast"></div>
 
 <script>
 
@@ -350,66 +320,27 @@ Loading...
    API
 ========================= */
 
-const API =
-"https://script.google.com/macros/s/AKfycbypNc1DGe8O1IqWq9Ufibv7BDdvQlAG5mkS8PFx_TDVqzHg9uI1pgxZ9r5nqU1LRh2tHQ/exec";
+const API = "https://script.google.com/macros/s/AKfycbwSxVEAM6Hu8O4Foot-iz3e7_IFWnOE7SdAAyYCb68EHOgaQ5KVOtEOuCi5-2znu-VFtQ/exec";
 
 /* =========================
-   IMGBB API
-========================= */
-
-const IMGBB_API =
-"3a41bb4dd27282cf62dae58882df7b54";
-
-/* =========================
-   GLOBAL
+   DATA
 ========================= */
 
 let data = [];
-let editIndex = null;
+let editId = null;
 
 /* =========================
-   ESCAPE
+   ELEMENT
 ========================= */
 
-function esc(str){
-
-  return String(str)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;");
-}
-
-/* =========================
-   TOAST
-========================= */
-
-function showToast(msg){
-
-  const toast =
-    document.getElementById("toast");
-
-  toast.innerText = msg;
-
-  toast.classList.add("show");
-
-  setTimeout(()=>{
-
-    toast.classList.remove("show");
-
-  },2000);
-}
-
-/* =========================
-   LOADING
-========================= */
-
-function showLoading(v){
-
-  document.getElementById("loading")
-    .style.display =
-      v ? "flex" : "none";
-}
+const table = document.getElementById("table");
+const site = document.getElementById("site");
+const siteFilter = document.getElementById("siteFilter");
+const jam = document.getElementById("jam");
+const gambar = document.getElementById("gambar");
+const previewImage = document.getElementById("previewImage");
+const modal = document.getElementById("modal");
+const pasteArea = document.getElementById("pasteArea");
 
 /* =========================
    LOAD
@@ -419,27 +350,29 @@ async function load(){
 
   try{
 
-    showLoading(true);
+    const res = await fetch(API,{
+      method:"GET",
+      mode:"cors"
+    });
 
-    const res =
-      await fetch(API);
+    if(!res.ok){
 
-    data =
-      await res.json();
+      throw new Error(
+        "HTTP " + res.status
+      );
+    }
 
-    updateDropdown();
+    data = await res.json();
 
     render();
 
+    dropdown();
+
   }catch(err){
 
-    console.log(err);
+    console.error(err);
 
-    showToast("Gagal load data");
-
-  }finally{
-
-    showLoading(false);
+    toast("Gagal load data");
   }
 }
 
@@ -447,36 +380,19 @@ async function load(){
    DROPDOWN
 ========================= */
 
-function updateDropdown(){
+function dropdown(){
 
-  const sites =
-    [...new Set(data.map(d=>d.Situs))];
+  const situs = [
+    ...new Set(data.map(d=>d.Situs))
+  ];
 
-  document.getElementById("siteFilter")
-    .innerHTML =
-
-      `<option value="all">
-        Semua Situs
-      </option>` +
-
-      sites.map(s=>`
-
-        <option value="${esc(s)}">
-          ${esc(s)}
-        </option>
-
-      `).join("");
-
-  document.getElementById("siteSelect")
-    .innerHTML =
-
-      sites.map(s=>`
-
-        <option value="${esc(s)}">
-          ${esc(s)}
-        </option>
-
-      `).join("");
+  siteFilter.innerHTML =
+    `<option value="all">Semua</option>` +
+    situs.map(v=>
+      `<option value="${v}">
+        ${v}
+      </option>`
+    ).join("");
 }
 
 /* =========================
@@ -485,56 +401,35 @@ function updateDropdown(){
 
 function render(){
 
-  const tbody =
-    document.getElementById("wdTableBody");
-
   const filter =
-    document.getElementById("siteFilter").value;
+    siteFilter.value || "all";
 
-  tbody.innerHTML = "";
+  let html = "";
 
-  data.forEach((d,i)=>{
+  [...data]
+  .reverse()
+  .forEach(d=>{
 
-    if(filter !== "all" &&
-       d.Situs !== filter) return;
+    if(
+      filter !== "all" &&
+      d.Situs !== filter
+    ) return;
 
-    tbody.innerHTML += `
-
+    html += `
       <tr>
 
-        <td>${esc(d.Situs)}</td>
+        <td>${d.Situs}</td>
 
         <td>
           ${new Date(d["Jam WD"])
-            .toLocaleString()}
-        </td>
-
-        <td>
-
-          <a
-            href="${esc(d["Link Bukti"])}"
-            target="_blank"
-            style="color:#60a5fa">
-
-            Buka
-
-          </a>
-
+            .toLocaleString("id-ID")}
         </td>
 
         <td>
 
           <img
-            src="${esc(d["Gambar"])}"
-
-            onclick="
-              showImg('${esc(d["Gambar"])}')
-            "
-
-            onerror="
-              this.src=
-              'https://via.placeholder.com/70?text=Error'
-            "
+            src="${d.Gambar}"
+            onclick="viewImage('${d.Gambar}')"
           >
 
         </td>
@@ -542,48 +437,32 @@ function render(){
         <td>
 
           <button
-            class="action-btn edit-btn"
-            onclick="edit(${i})">
-
+            class="action-btn edit"
+            onclick="edit('${d.id}')"
+          >
             Edit
-
           </button>
 
           <button
-            class="action-btn delete-btn"
-            onclick="del(${i})">
-
+            class="action-btn del"
+            onclick="removeData('${d.id}')"
+          >
             Hapus
-
           </button>
 
         </td>
 
       </tr>
-
     `;
   });
 
-  if(tbody.innerHTML === ""){
-
-    tbody.innerHTML = `
-
-      <tr>
-        <td colspan="5" class="empty">
-          Tidak ada data
-        </td>
-      </tr>
-
-    `;
-  }
+  table.innerHTML = html;
 }
 
-/* =========================
-   FILTER
-========================= */
-
-document.getElementById("siteFilter")
-  .addEventListener("change",render);
+siteFilter.addEventListener(
+  "change",
+  render
+);
 
 /* =========================
    OPEN FORM
@@ -591,112 +470,47 @@ document.getElementById("siteFilter")
 
 function openForm(){
 
-  editIndex = null;
+  editId = null;
 
-  document.getElementById("formTitle")
-    .innerText = "Tambah Data";
+  modal.style.display = "flex";
 
-  document.getElementById("formModal")
-    .style.display = "flex";
+  jam.value = "";
 
-  document.getElementById("jam").value = "";
+  gambar.value = "";
 
-  document.getElementById("link").value = "";
-
-  document.getElementById("gambar").value = "";
-
-  document.getElementById("preview")
-    .style.display = "none";
+  previewImage.style.display = "none";
 }
 
 /* =========================
-   CLOSE FORM
+   CLOSE MODAL
 ========================= */
 
-function closeForm(){
+function closeModal(e){
 
-  document.getElementById("formModal")
-    .style.display = "none";
-}
+  if(e.target.id === "modal"){
 
-function outsideClose(e){
-
-  if(e.target.id === "formModal")
-    closeForm();
+    modal.style.display = "none";
+  }
 }
 
 /* =========================
    PREVIEW
 ========================= */
 
-function previewImg(){
+function updatePreview(){
 
-  const val =
-    document.getElementById("gambar").value;
+  if(!gambar.value){
 
-  const preview =
-    document.getElementById("preview");
-
-  if(!val){
-
-    preview.style.display = "none";
+    previewImage.style.display =
+      "none";
 
     return;
   }
 
-  preview.src = val;
+  previewImage.src = gambar.value;
 
-  preview.style.display = "block";
-}
-
-/* =========================
-   SHOW IMAGE
-========================= */
-
-function showImg(src){
-
-  document.getElementById("modalImg")
-    .src = src;
-
-  document.getElementById("imgModal")
-    .style.display = "flex";
-}
-
-function closeImg(){
-
-  document.getElementById("imgModal")
-    .style.display = "none";
-}
-
-/* =========================
-   EDIT
-========================= */
-
-function edit(i){
-
-  const d = data[i];
-
-  editIndex = i;
-
-  document.getElementById("formTitle")
-    .innerText = "Edit Data";
-
-  document.getElementById("formModal")
-    .style.display = "flex";
-
-  document.getElementById("siteSelect")
-    .value = d.Situs;
-
-  document.getElementById("jam")
-    .value = d["Jam WD"];
-
-  document.getElementById("link")
-    .value = d["Link Bukti"];
-
-  document.getElementById("gambar")
-    .value = d["Gambar"];
-
-  previewImg();
+  previewImage.style.display =
+    "block";
 }
 
 /* =========================
@@ -705,272 +519,285 @@ function edit(i){
 
 async function save(){
 
-  const jam =
-    document.getElementById("jam").value;
+  if(
+    !jam.value ||
+    !gambar.value
+  ){
 
-  const link =
-    document.getElementById("link").value;
-
-  const gambar =
-    document.getElementById("gambar").value;
-
-  const situs =
-    document.getElementById("siteSelect").value;
-
-  if(!jam || !link){
-
-    showToast("Data belum lengkap!");
+    toast("Lengkapi data");
 
     return;
   }
 
   try{
 
-    showLoading(true);
+    const payload = {
 
-    const params =
-      new URLSearchParams({
+      action :
+        editId ? "edit" : "add",
 
-        action:
-          editIndex != null
-            ? "edit"
-            : "add",
+      id :
+        editId || "",
 
-        index: editIndex,
+      situs :
+        site.value,
 
-        situs,
+      jam :
+        jam.value,
 
-        jam,
+      gambar :
+        gambar.value
+    };
 
-        link,
+    const res = await fetch(API,{
 
-        gambar
+      method:"POST",
 
-      });
+      body:JSON.stringify(payload)
+    });
 
-    await fetch(`${API}?${params}`);
+    const json = await res.json();
 
-    showToast("Berhasil disimpan!");
+    if(!json.success){
 
-    closeForm();
+      throw new Error(
+        json.message
+      );
+    }
+
+    toast("Berhasil disimpan");
+
+    modal.style.display = "none";
 
     load();
 
   }catch(err){
 
-    console.log(err);
+    console.error(err);
 
-    showToast("Gagal menyimpan");
-
-  }finally{
-
-    showLoading(false);
+    toast("Gagal simpan");
   }
+}
+
+/* =========================
+   EDIT
+========================= */
+
+function edit(id){
+
+  const d =
+    data.find(x=>x.id == id);
+
+  if(!d) return;
+
+  editId = id;
+
+  modal.style.display = "flex";
+
+  site.value = d.Situs;
+
+  jam.value =
+    formatDate(d["Jam WD"]);
+
+  gambar.value = d.Gambar;
+
+  updatePreview();
 }
 
 /* =========================
    DELETE
 ========================= */
 
-async function del(i){
+async function removeData(id){
 
-  if(!confirm("Hapus data ini?"))
-    return;
+  if(
+    !confirm("Hapus data?")
+  ) return;
 
   try{
 
-    showLoading(true);
+    const res = await fetch(API,{
 
-    await fetch(
-      `${API}?action=delete&index=${i}`
-    );
+      method:"POST",
 
-    showToast("Data terhapus");
+      body:JSON.stringify({
+
+        action:"delete",
+
+        id
+      })
+    });
+
+    const json = await res.json();
+
+    if(!json.success){
+
+      throw new Error(
+        json.message
+      );
+    }
+
+    toast("Data dihapus");
 
     load();
 
   }catch(err){
 
-    console.log(err);
+    console.error(err);
 
-    showToast("Gagal menghapus");
-
-  }finally{
-
-    showLoading(false);
+    toast("Gagal hapus");
   }
 }
 
 /* =========================
-   PASTE AREA
+   FORMAT DATE
 ========================= */
 
-const pasteArea =
-  document.getElementById("pasteArea");
+function formatDate(dateString){
+
+  const d = new Date(dateString);
+
+  const pad = n =>
+    n.toString()
+    .padStart(2,"0");
+
+  return `${d.getFullYear()}-${
+    pad(d.getMonth()+1)
+  }-${
+    pad(d.getDate())
+  }T${
+    pad(d.getHours())
+  }:${
+    pad(d.getMinutes())
+  }`;
+}
 
 /* =========================
-   PASTE IMAGE
+   IMAGE VIEWER
+========================= */
+
+function viewImage(src){
+
+  const modal =
+    document.getElementById(
+      "imageModal"
+    );
+
+  const img =
+    document.getElementById(
+      "modalImage"
+    );
+
+  img.src = src;
+
+  modal.style.display = "flex";
+}
+
+document
+.getElementById("imageModal")
+.addEventListener("click",()=>{
+
+  document.getElementById(
+    "imageModal"
+  ).style.display = "none";
+});
+
+/* =========================
+   TOAST
+========================= */
+
+function toast(msg){
+
+  const t =
+    document.getElementById(
+      "toast"
+    );
+
+  t.innerText = msg;
+
+  t.classList.add("show");
+
+  setTimeout(()=>{
+
+    t.classList.remove("show");
+
+  },2000);
+}
+
+/* =========================
+   HANDLE IMAGE
+========================= */
+
+function handleImage(file){
+
+  if(!file) return;
+
+  if(
+    file.size >
+    2 * 1024 * 1024
+  ){
+
+    toast("Maksimal 2MB");
+
+    return;
+  }
+
+  const reader =
+    new FileReader();
+
+  reader.onload = ()=>{
+
+    gambar.value =
+      reader.result;
+
+    updatePreview();
+  };
+
+  reader.readAsDataURL(file);
+}
+
+/* =========================
+   PASTE
 ========================= */
 
 pasteArea.addEventListener(
   "paste",
-  (e)=>{
+  e=>{
 
-    const items =
-      (e.clipboardData ||
-      e.originalEvent.clipboardData).items;
+    const item =
+      [...e.clipboardData.items]
+      .find(i=>
+        i.type.startsWith("image")
+      );
 
-    for(const item of items){
+    if(!item) return;
 
-      if(item.type.indexOf("image") === 0){
-
-        const file =
-          item.getAsFile();
-
-        uploadImage(file);
-      }
-    }
-  }
-);
+    handleImage(
+      item.getAsFile()
+    );
+});
 
 /* =========================
-   DRAG OVER
+   DRAG DROP
 ========================= */
 
 pasteArea.addEventListener(
   "dragover",
-  (e)=>{
+  e=>{
 
     e.preventDefault();
-
-    pasteArea.classList.add("active");
-  }
-);
-
-/* =========================
-   DRAG LEAVE
-========================= */
-
-pasteArea.addEventListener(
-  "dragleave",
-  ()=>{
-
-    pasteArea.classList.remove("active");
-  }
-);
-
-/* =========================
-   DROP
-========================= */
+});
 
 pasteArea.addEventListener(
   "drop",
-  (e)=>{
+  e=>{
 
     e.preventDefault();
 
-    pasteArea.classList.remove("active");
-
-    const file =
-      e.dataTransfer.files[0];
-
-    if(file){
-
-      uploadImage(file);
-    }
-  }
-);
-
-/* =========================
-   UPLOAD IMAGE
-========================= */
-
-async function uploadImage(file){
-
-  try{
-
-    showLoading(true);
-
-    showToast("Uploading...");
-
-    /* FILE -> BASE64 */
-    const reader =
-      new FileReader();
-
-    reader.readAsDataURL(file);
-
-    reader.onload = async ()=>{
-
-      try{
-
-        const base64 =
-          reader.result.split(",")[1];
-
-        const formData =
-          new FormData();
-
-        formData.append(
-          "image",
-          base64
-        );
-
-        const res =
-          await fetch(
-
-            `https://api.imgbb.com/1/upload?key=${IMGBB_API}`,
-
-            {
-              method:"POST",
-              body:formData
-            }
-          );
-
-        const json =
-          await res.json();
-
-        console.log(json);
-
-        if(!json.success){
-
-          showToast(
-            json.error?.message ||
-            "Upload gagal"
-          );
-
-          return;
-        }
-
-        const url =
-          json.data.url;
-
-        document.getElementById("gambar")
-          .value = url;
-
-        previewImg();
-
-        showToast("Upload berhasil!");
-
-      }catch(err){
-
-        console.log(err);
-
-        showToast("Gagal upload");
-
-      }finally{
-
-        showLoading(false);
-      }
-    };
-
-  }catch(err){
-
-    console.log(err);
-
-    showToast("Error upload");
-
-    showLoading(false);
-  }
-}
+    handleImage(
+      e.dataTransfer.files[0]
+    );
+});
 
 /* =========================
    START
